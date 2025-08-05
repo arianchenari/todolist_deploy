@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.buttons{
+    @apply text-slate-600 px-2 py-2 cursor-pointer relative after:content-['']
+    after:absolute after:left-0 after:bottom-0 after:bg-slate-300 after:h-[2px] 
+    after:w-full after:scale-x-0   after:origin-left after:transition-transform 
+    duration-300 hover:after:scale-x-100 hover:text-slate-300
+}
+
+.selected{
+    @apply after:scale-x-100 text-slate-300
+}
+
+body{
+    background-color: #0f172a;
+}
+
+.shadow{
+    box-shadow: 0px 0px 10px #64748b;
+}
+
