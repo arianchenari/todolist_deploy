@@ -9,6 +9,10 @@ const Nav = () => {
             <li className={urlLi === '/' ? 'buttons selected' : 'buttons'}>
               <Link to={'/'}>Home</Link>
             </li>
+
+            <li className={urlLi === '/add' ? 'buttons selected' : 'buttons'}>
+              <Link to={'/add'}>Add</Link>
+            </li>
             
             <li className={urlLi === '/search' ? 'buttons selected' : 'buttons'}>
               <Link to={'/search'}>Search</Link>
