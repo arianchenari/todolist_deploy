@@ -6,7 +6,7 @@ const Post = ({ post, handleCheck, handleClick, handleDelete, buttons }) => {
   return (
     <li className="grid items-center justify-center grid-cols-[50px_80px_1fr_40px] md:grid-cols-[50px_100px_1fr_1fr_100px_40px] border-2 bg-slate-950 border-slate-900 shadow-md duration-300 hover:shadow-slate-500 0 my-4 text-slate-400 p-2">
         <input type="checkbox" name="Checkbox" className="w-4" checked={post.checked} onChange={() => handleCheck(post.id)}/>
-        <h1><Link to={`/${post.id}`}>{post.title}</Link></h1>
+        <h1><Link to={`/${post.id}`}>{post.title.length >= 8 ? `${post.title.slice(0, 8)}...` : post.title}</Link></h1>
         <p><Link to={`/${post.id}`}>{post.body.length >= 25 ? `${post.body.slice(0, 25)}...` : post.body}</Link></p>
         <p className="hidden md:flex">{post.datetime}</p>
         <p className={

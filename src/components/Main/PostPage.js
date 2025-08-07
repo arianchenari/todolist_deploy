@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 const PostPage = ({ 
@@ -14,7 +14,7 @@ const PostPage = ({
         setEditTitle(post.title);
         setEditBody(post.body);
         setEditTime(formatedDate);
-    }, []);
+    }, [post.priority, post.title, post.body, post.datetime]);
 
   return (
     <main className="flex-grow bg-slate-700 rounded-md px-2 py-2 relative">

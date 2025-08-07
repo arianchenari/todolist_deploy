@@ -42,12 +42,17 @@ function App() {
       checked: false
     }
   ]);
-  const [buttons, setButtons] = useState(null);
+  const [buttons, setButtons] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [editPriority, setEditPriority] = useState('');
   const [editTitle, setEditTitle] = useState('');
   const [editBody, setEditBody] = useState('');
   const [editTime, setEditTime] = useState('');
+  const [priority, setPriority] = useState('high');
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [time, setTime] = useState('');
+  const [addMessage, setAddMessage] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,10 +69,11 @@ function App() {
     const newPostsList = posts.filter(post => post.id !== id);
     setPosts(newPostsList);
     setTimeout(() => navigate('/'), 0);
+    if(!addMessage)
     setDeleteMessage(true);
     setTimeout(() => {
       setDeleteMessage(false);
-    },2000 );
+    }, 1500);
   }
 
   const handleSubmit = (id) => {
@@ -94,6 +100,30 @@ function App() {
     console.log(newPostsList);
     navigate('/');
   }
+
+  const handleAdd = () => {
+    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const date = new Date(time);
+    const datetime = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit'
+    });
+    const newPost = { id, title, body, datetime, priority, checked: false };
+    const newPostsList = [...posts, newPost];
+    setPosts(newPostsList);
+    setTitle('');
+    setBody('');
+    setTime('');
+    setPriority('high');
+    setButtons(false);
+    navigate('/');
+    if(!deleteMessage)
+    setAddMessage(true);
+    setTimeout(() => {
+      setAddMessage(false);
+    }, 1500);
+  }
  
   return (
     <div className="max-w-[800px] h-screen m-auto flex flex-col shadow bg-slate-950 px-2 py-6 text-white">
@@ -105,6 +135,7 @@ function App() {
               handleClick={handleClick} 
               handleDelete={handleDelete} 
               deleteMessage={deleteMessage}
+              addMessage={addMessage}
               buttons={buttons} /> 
             }/>
           <Route path="/:id" 
@@ -121,7 +152,17 @@ function App() {
             handleDelete={handleDelete}
             />}
           />
-          <Route path="/add" element={ <Add /> }/>
+          <Route path="/add" element={ <Add 
+            title={title}
+            setTitle={setTitle}
+            body={body}
+            setBody={setBody}
+            time={time}
+            setTime={setTime}
+            priority={priority}
+            setPriority={setPriority}
+            handleAdd={handleAdd}
+          /> }/>
           <Route path="/search" element={ <Search /> }/>
           <Route path="/about" element={ <About /> }/>
           <Route path="*" element={ <Missing /> }/>
