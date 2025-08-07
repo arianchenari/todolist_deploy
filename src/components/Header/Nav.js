@@ -13,11 +13,7 @@ const Nav = () => {
             <li className={urlLi === '/add' ? 'buttons selected' : 'buttons'}>
               <Link to={'/add'}>Add</Link>
             </li>
-            
-            <li className={urlLi === '/search' ? 'buttons selected' : 'buttons'}>
-              <Link to={'/search'}>Search</Link>
-            </li>
-
+        
             <li className={urlLi === '/about' ? 'buttons selected' : 'buttons'}>
               <Link to={'/about'}>About</Link>
             </li>

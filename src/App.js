@@ -1,13 +1,12 @@
 import Header from "./components/Header/Header";
 import Home from "./components/Main/Home"; 
 import Add from "./components/Main/Add"; 
-import Search from "./components/Main/Search";
 import PostPage from "./components/Main/PostPage";
 import About from "./components/Main/About";
 import Footer from "./components/Footer/Footer";
 import Missing from "./components/Error/Missing";
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 function App() {
@@ -42,8 +41,13 @@ function App() {
       checked: false
     }
   ]);
+  const [search, setSearch] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchList, setSearchList] = useState([]);
   const [buttons, setButtons] = useState(false);
+  const [buttonsFilter, setButtonsFilter] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
+  const [addMessage, setAddMessage] = useState(false);
   const [editPriority, setEditPriority] = useState('');
   const [editTitle, setEditTitle] = useState('');
   const [editBody, setEditBody] = useState('');
@@ -52,9 +56,52 @@ function App() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [time, setTime] = useState('');
-  const [addMessage, setAddMessage] = useState(false);
-
+  const [sort, setSort] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(buttonsFilter) setSort('');
+    if(search){
+      const newPostsList = posts.filter(post => post.title.toLowerCase().includes(search.toLocaleLowerCase())
+        || post.body.toLocaleLowerCase().includes(search.toLowerCase())
+        || post.priority.toLocaleLowerCase().includes(search.toLowerCase())
+      );
+      setSearchResult(newPostsList);
+      setSearchList(newPostsList);
+    } else{
+      setSearchResult(posts);
+      setSearchList(posts);
+    }
+    if(sort === 'check'){
+      const truePosts = searchList.filter(post => post.checked)
+      const falsePosts = searchList.filter(post => !post.checked)
+      const newPostsList = [...truePosts, ...falsePosts];
+      setSearchResult(newPostsList);
+    }
+    if(sort === 'priority'){
+      const highPosts = searchList.filter(post => post.priority === 'high')
+      const midPosts = searchList.filter(post => post.priority === 'mid')
+      const lowPosts = searchList.filter(post => post.priority === 'low')
+      const newPostsList = [...highPosts, ...midPosts, ...lowPosts];
+      setSearchResult(newPostsList);
+    }
+    if(sort === 'due'){
+      const today = new Date();
+      const arrNearDay =searchList.map(post => {
+        const datetime = new Date(post.datetime);
+        const diffTime = today - datetime;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+        return {
+          id: post.id,
+          diffDays
+        }
+      });
+      const sortedArrNearDay = arrNearDay.sort((a, b) => a.diffDays - b.diffDays);
+      const newPostsList = sortedArrNearDay.map(item => searchList.find(post => post.id === item.id ? post : null));
+      setSearchResult(newPostsList);
+    }
+
+  }, [search, posts, sort, buttonsFilter, searchList]);
 
   const handleCheck = (id) => {
     const postsList = posts.map(post => post.id === id ? {...post, checked: !post.checked} : post);
@@ -130,16 +177,23 @@ function App() {
         <Header></Header>
         <Routes>
           <Route path="/" element={ <Home 
-              posts={posts} 
+              posts={searchResult}
               handleCheck={handleCheck} 
               handleClick={handleClick} 
               handleDelete={handleDelete} 
               deleteMessage={deleteMessage}
               addMessage={addMessage}
-              buttons={buttons} /> 
+              buttons={buttons}
+              search={search}
+              setSearch={setSearch}
+              buttonsFilter={buttonsFilter}
+              setButtonsFilter={setButtonsFilter}
+              sort={sort}
+              setSort={setSort}
+              />
             }/>
           <Route path="/:id" 
-            element={<PostPage posts={posts} 
+            element={<PostPage posts={searchResult}
             editPriority={editPriority}
             setEditPriority={setEditPriority}
             editBody={editBody}
@@ -163,7 +217,6 @@ function App() {
             setPriority={setPriority}
             handleAdd={handleAdd}
           /> }/>
-          <Route path="/search" element={ <Search /> }/>
           <Route path="/about" element={ <About /> }/>
           <Route path="*" element={ <Missing /> }/>
         </Routes>
