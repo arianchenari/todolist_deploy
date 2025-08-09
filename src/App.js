@@ -8,39 +8,8 @@ import Missing from "./components/Error/Missing";
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
-
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: 'first',
-      body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam quisquam est voluptas saepe perferendis. Pariatur odio officiis fugit libero delectus. Ratione veniam ipsum harum, fugiat labore in ut neque doloribus.',
-      datetime: "July 04, 2021",
-      priority: 'high',
-      checked: true
-    }, {
-      id: 2,
-      title: 'second',
-      body: 'Hello lasdkidmee ariancc he a fsa',
-      datetime: "July 01, 2021",
-      priority: 'mid',
-      checked: false
-    }, {
-      id: 3,
-      title: 'Third',
-      body: 'hi',
-      datetime: "Jun 09, 2023",
-      priority: 'high',
-      checked: false
-    }, {
-      id: 4,
-      title: '4th',
-      body: 'Lorem ipsum dolor sit amet, cclsc,sc iarjmas',
-      datetime: "December 20, 2020",
-      priority: 'low',
-      checked: false
-    }
-  ]);
+  const [posts, setPosts] = useState( JSON.parse(localStorage.getItem('posts')) || []);
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const [searchList, setSearchList] = useState([]);
@@ -58,6 +27,10 @@ function App() {
   const [time, setTime] = useState('');
   const [sort, setSort] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem('posts', JSON.stringify(posts));
+  }, [posts])
 
   useEffect(() => {
     if(buttonsFilter) setSort('');
@@ -101,18 +74,18 @@ function App() {
       setSearchResult(newPostsList);
     }
 
-  }, [search, posts, sort, buttonsFilter, searchList]);
+  }, [search, posts, sort, buttonsFilter]);
 
-  const handleCheck = (id) => {
-    const postsList = posts.map(post => post.id === id ? {...post, checked: !post.checked} : post);
-    setPosts(postsList);
+  const handleCheck = async (id) => {
+    const newPostsList = posts.map(post => post.id === id ? {...post, checked: !post.checked} : post );
+    setPosts(newPostsList);
   }
 
   const handleClick = (id) => {
     buttons === id ? setButtons(null) : setButtons(id);
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const newPostsList = posts.filter(post => post.id !== id);
     setPosts(newPostsList);
     setTimeout(() => navigate('/'), 0);
@@ -148,7 +121,7 @@ function App() {
     navigate('/');
   }
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
     const date = new Date(time);
     const datetime = date.toLocaleDateString('en-US', {
@@ -157,6 +130,7 @@ function App() {
       day: '2-digit'
     });
     const newPost = { id, title, body, datetime, priority, checked: false };
+
     const newPostsList = [...posts, newPost];
     setPosts(newPostsList);
     setTitle('');
@@ -165,6 +139,7 @@ function App() {
     setPriority('high');
     setButtons(false);
     navigate('/');
+
     if(!deleteMessage)
     setAddMessage(true);
     setTimeout(() => {

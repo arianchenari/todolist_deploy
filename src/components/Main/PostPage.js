@@ -18,7 +18,7 @@ const PostPage = ({
 
   return (
     <main className="flex-grow bg-slate-700 rounded-md px-2 py-2 relative">
-        {post ? (
+        {post.title ? (
             <ul className="flex flex-col gap-2">
             <li className="flex bg-slate-700 rounded-lg border-slate-950 border-2">
                 <h1 className="bg-slate-950 text-slate-100 h-full p-1">Title</h1>
