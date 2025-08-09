@@ -14,7 +14,7 @@ const PostPage = ({
         setEditTitle(post.title);
         setEditBody(post.body);
         setEditTime(formatedDate);
-    }, [post.priority, post.title, post.body, post.datetime]);
+    }, [post.priority, post.title, post.body, post.datetime, setEditPriority, setEditTitle, setEditBody, setEditTime]);
 
   return (
     <main className="flex-grow bg-slate-700 rounded-md px-2 py-2 relative">

@@ -5,7 +5,7 @@ import { faCheck, faSearch, faAngleLeft } from '@fortawesome/free-solid-svg-icon
 const Home = ({ 
     posts, handleCheck, handleClick, handleDelete, deleteMessage, 
     addMessage, buttons, search, setSearch, buttonsFilter, setButtonsFilter,
-    sort, setSort
+    sort, handleSearchingPosts
 }) => {
   return (
     <main className="flex-grow bg-slate-700 rounded-md px-2 overflow-y-auto">
@@ -24,7 +24,7 @@ const Home = ({
               type="button" 
               className={sort === 'priority' ? "text-slate-400 bg-inherit text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1"
                : "text-slate-400 bg-slate-600 text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1 hover:text-slate-200"}
-              onClick={() => setSort('priority')}
+              onClick={() => handleSearchingPosts('priority')}
             >
                 Sorted by Priority  
             </button>
@@ -32,7 +32,7 @@ const Home = ({
               type="button" 
               className={sort === 'due' ? "text-slate-400 bg-inherit text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1"
                : "text-slate-400 bg-slate-600 text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1 hover:text-slate-200"}
-              onClick={() => setSort('due')}
+              onClick={() => handleSearchingPosts('due')}
             >
               Sorted by Nearset Due
             </button>
@@ -40,7 +40,7 @@ const Home = ({
               type="button" 
               className={sort === 'check' ? "text-slate-400 bg-inherit text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1"
                : "text-slate-400 bg-slate-600 text-[9px] md:text-[12px] pr-1 border-l-4 border-slate-950 px-1 hover:text-slate-200"}
-              onClick={() => setSort('check')}
+              onClick={() => handleSearchingPosts('check')}
             >
               Sorted By Checked
             </button>
@@ -74,7 +74,8 @@ const Home = ({
           Deleted Post
       </h1>
       <h1 className={addMessage ? 'bg-zinc-950 text-slate-200 px-4 py-2 absolute bottom-[12%] left-[50%] translate-x-[-50%] rounded-md duration-700 opacity-50'
-          : 'bg-zinc-950 text-slate-200 px-4 py-2 absolute bottom-[12%] left-[50%] rounded-md duration-300 opacity-0'}>
+          : 'bg-zinc-950 text-slate-200 px-4 py-2 absolute bottom-[12%] left-[50%] rounded-md duration-300 opacity-0'}
+          >
           <FontAwesomeIcon icon={faCheck} className='text-green-500 mr-2'/>
           Post Added
       </h1>

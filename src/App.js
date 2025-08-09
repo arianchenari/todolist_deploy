@@ -12,7 +12,7 @@ function App() {
   const [posts, setPosts] = useState( JSON.parse(localStorage.getItem('posts')) || []);
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState([]);
-  const [searchList, setSearchList] = useState([]);
+  //const [searchList, setSearchList] = useState([]);
   const [buttons, setButtons] = useState(false);
   const [buttonsFilter, setButtonsFilter] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
@@ -40,27 +40,30 @@ function App() {
         || post.priority.toLocaleLowerCase().includes(search.toLowerCase())
       );
       setSearchResult(newPostsList);
-      setSearchList(newPostsList);
     } else{
       setSearchResult(posts);
-      setSearchList(posts);
     }
-    if(sort === 'check'){
-      const truePosts = searchList.filter(post => post.checked)
-      const falsePosts = searchList.filter(post => !post.checked)
+
+  }, [search, posts, buttonsFilter]);
+
+  const handleSearchingPosts = (value) => {
+    setSort(value);
+    if(value === 'check'){
+      const truePosts = searchResult.filter(post => post.checked)
+      const falsePosts = searchResult.filter(post => !post.checked)
       const newPostsList = [...truePosts, ...falsePosts];
       setSearchResult(newPostsList);
     }
-    if(sort === 'priority'){
-      const highPosts = searchList.filter(post => post.priority === 'high')
-      const midPosts = searchList.filter(post => post.priority === 'mid')
-      const lowPosts = searchList.filter(post => post.priority === 'low')
+    if(value === 'priority'){
+      const highPosts = searchResult.filter(post => post.priority === 'high')
+      const midPosts = searchResult.filter(post => post.priority === 'mid')
+      const lowPosts = searchResult.filter(post => post.priority === 'low')
       const newPostsList = [...highPosts, ...midPosts, ...lowPosts];
       setSearchResult(newPostsList);
     }
-    if(sort === 'due'){
+    if(value === 'due'){
       const today = new Date();
-      const arrNearDay =searchList.map(post => {
+      const arrNearDay =searchResult.map(post => {
         const datetime = new Date(post.datetime);
         const diffTime = today - datetime;
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
@@ -70,11 +73,10 @@ function App() {
         }
       });
       const sortedArrNearDay = arrNearDay.sort((a, b) => a.diffDays - b.diffDays);
-      const newPostsList = sortedArrNearDay.map(item => searchList.find(post => post.id === item.id ? post : null));
+      const newPostsList = sortedArrNearDay.map(item => searchResult.find(post => post.id === item.id ? post : null));
       setSearchResult(newPostsList);
     }
-
-  }, [search, posts, sort, buttonsFilter]);
+  }
 
   const handleCheck = async (id) => {
     const newPostsList = posts.map(post => post.id === id ? {...post, checked: !post.checked} : post );
@@ -165,6 +167,7 @@ function App() {
               setButtonsFilter={setButtonsFilter}
               sort={sort}
               setSort={setSort}
+              handleSearchingPosts={handleSearchingPosts}
               />
             }/>
           <Route path="/:id" 
